@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+*.cache
+*.egg-info
+*.log
+
+# OS-specific
+.DS_Store
+db.sqlite3
+
+# Environments
+env/
+
+# IDE-specific (Por ejemplo, para PyCharm)
+.idea/
+*.iml
+
+# Archivos temporales
+*.bak
+*.swp
+*.swo
