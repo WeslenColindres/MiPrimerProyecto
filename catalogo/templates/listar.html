@@ -89,4 +89,21 @@
     {% endfor %}
   </tbody>
 </table>
+<div class="pagination">
+  <span class="step-links">
+      {% if resultados.has_previous %}
+          <a href="?page=1&search={{ query }}&action={{ action }}">Primero</a>
+          <a href="?page={{ resultados.previous_page_number }}&search={{ query }}&action={{ action }}">Anterior</a>
+      {% endif %}
+
+      <span class="current">
+          Página {{ resultados.number }} de {{ resultados.paginator.num_pages }}.
+      </span>
+
+      {% if resultados.has_next %}
+          <a href="?page={{ resultados.next_page_number }}&search={{ query }}&action={{ action }}">Siguiente</a>
+          <a href="?page={{ resultados.paginator.num_pages }}&search={{ query }}&action={{ action }}">Último</a>
+      {% endif %}
+  </span>
+</div>
 {%endblock%}

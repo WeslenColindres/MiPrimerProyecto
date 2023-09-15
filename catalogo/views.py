@@ -8,7 +8,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.decorators import permission_required
-from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
@@ -131,7 +131,19 @@ def listar(request):
             depto_entry['municipios'].append({'id': municipio.id, 'nombre': municipio.nombre})
 
         
+    paginator = Paginator(context['resultados'], 10)
+    page = request.GET.get('page')
 
+    try:
+        resultados_paginados = paginator.page(page)
+    except PageNotAnInteger:
+       
+        resultados_paginados = paginator.page(1)
+    except EmptyPage:
+        
+        resultados_paginados = paginator.page(paginator.num_pages)
+
+    context['resultados'] = resultados_paginados
 
     return render(request, 'listar.html', context)
     
