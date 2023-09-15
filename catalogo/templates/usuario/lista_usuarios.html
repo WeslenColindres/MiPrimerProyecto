@@ -1,0 +1,21 @@
+{% extends 'base.html' %} 
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style_usuarios.css' %}">
+{% endblock %}
+{%block content%}
+
+<div class="user-list">
+  <h1>Usuarios</h1>
+  <ul>
+    {% for usuario in usuarios %}
+    <li>
+      {{ usuario.username }}
+      <a href="{% url 'editar_permisos_usuario' usuario.id %}"
+        >Editar permisos</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{%endblock%}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %} 
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style_login.css' %}">
+{% endblock %}
+{%block content%}
+<form method="post" class="login-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="login-button">Iniciar sesión</button>
+    <a href="{% url 'register' %}">Crear usuario: Registrate</a>
+</form>
+{% endblock %}

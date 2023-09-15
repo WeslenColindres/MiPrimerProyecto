@@ -1,0 +1,19 @@
+{% extends 'base.html' %} 
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style_permisos.css' %}">
+{% endblock %}
+{%block content%}
+<div class="edit-permissions">
+  <h1>Editar permisos para {{ usuario.username }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% for permiso in permisos %}
+        <input type="checkbox" name="permisos" value="{{ permiso.id }}"
+               {% if permiso in permisos_actuales %}checked{% endif %}>
+        {{ permiso.name }}<br>
+    {% endfor %}
+    <input type="submit" value="Guardar">
+</form>
+</div>
+{% endblock %}

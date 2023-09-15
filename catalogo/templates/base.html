@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    {% block style %} {% endblock %}
+  </head>
+  <body>
+    <header>
+      <section>
+        <img src="" alt="logo" />
+      </section>
+      <section>
+        <nav>
+          <ul>
+            <li>
+              <a href="{% url 'listar'%}">Paises</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+              {% if 'catalogo.add_pais' in perms %}
+              <a href="{% url 'agregar_pais'%}">Agregar Pais</a>
+              {% endif %}
+            </li>
+            <li>
+              {% if 'catalogo.add_departamento' in perms %}
+              <a href="{% url 'agregar_dep'%}">Agregar Departamento</a>
+              {% endif %}
+            </li>
+            <li>
+              {% if 'catalogo.add_municipio' in perms %}
+              <a href="{% url 'agregar_municipio'%}">Agregar municipio</a>
+              {% endif %}
+            </li>
+            <li>
+              {% if 'catalogo.change_departamento' in perms %}
+              <a href="{% url 'lista_usuarios'%}">usuarios</a>
+              {% endif %}
+            </li>
+            {% else %} {% endif %}
+            <li>
+              {% if user.is_authenticated %}
+              <a href="{% url 'logout' %}">LogOut</a>
+              {% else %}
+              <a href="{% url 'login' %}">Login</a>
+              <a href="{% url 'register' %}">Registrar</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+      </section>
+    </header>
+    <main>
+      <div class="container">
+        {% block content %}
+        <h1>hola bienvenido</h1>
+        {% endblock %}
+      </div>
+    </main>
+  </body>
+</html>

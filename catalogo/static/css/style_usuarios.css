@@ -1,0 +1,33 @@
+/* Lista de usuarios */
+.user-list {
+    background-color: #e9ecef;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.user-list h1 {
+    font-size: 24px;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.user-list ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.user-list li {
+    font-size: 18px;
+    color: #6c757d;
+    padding: 10px 0;
+}
+
+.user-list a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.user-list a:hover {
+    color: #0056b3;
+}

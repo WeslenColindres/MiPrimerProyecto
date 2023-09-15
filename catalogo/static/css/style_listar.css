@@ -1,0 +1,79 @@
+/* Reseteo básico para elementos de formulario y listas */
+form, ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Estilo para el formulario */
+form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+form input[type="text"], 
+form button {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+form button {
+    cursor: pointer;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+/* Estilo para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead, th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 75%;
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 25%;
+}
+
+ul{
+    margin-left: 80px;
+}
+
+td ul li h1 {
+font-size:18px;
+font-weight: normal;
+}
+
+td ul {
+    display: none;
+}
+
+td:hover > ul {
+    display: block;
+}
+
+/* Estilo para las listas */
+ul ul { 
+    display: none;
+    padding: 4px 0 16px 0;
+    
+}
+
+ul li:hover > ul {
+    display: block;
+    margin-left:50px;
+}

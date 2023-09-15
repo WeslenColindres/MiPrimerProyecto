@@ -1,0 +1,12 @@
+{% extends 'base.html' %} 
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style_registro.css' %}">
+{% endblock %}
+{%block content%}
+<form method="post" class="register-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="register-button">Registrar</button>
+</form>
+{% endblock %}

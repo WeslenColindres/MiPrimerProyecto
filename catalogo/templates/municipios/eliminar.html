@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Eliminar Municipio</h2>
+<p>¿Estás seguro de que deseas eliminar el Municipio "{{ municipio }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Eliminar país">
+</form>
+{%endblock%}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% block style %} {% load static %}
+<link rel="stylesheet" href="{% static 'css/style_listar.css' %}" />
+{% endblock %} {%block content%}
+
+<form method="get">
+  <input
+    type="text"
+    name="search"
+    value="{{ query }}"
+    placeholder="Buscar por nombre..."
+  />
+  <button type="submit" name="action" value="buscar">Buscar</button>
+  <button type="submit" name="action" value="listar">listar_paises</button>
+</form>
+<!-- <table>
+    <thead>
+        <tr>
+            <th>Nombre del país</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pais in paises %}
+        <tr>
+            <td>{{ pais.nombre }}
+                
+            </td>
+            <td>
+                <a href="{% url 'pais_edit' pais.id %}" class="button-link">Modificar</a>
+                <a href="{% url 'pais_delete' pais.id %}" class="button-link">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table> -->
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre del país</th>
+      {% if user.is_authenticated %}
+      <th>Acciones</th>
+      {% endif%}
+    </tr>
+  </thead>
+  <tbody>
+    {% for resultado in resultados %}
+    <tr>
+      <td>
+        {{ resultado.pais }}
+        <ul>
+          {% for departamento in resultado.departamentos %}
+          <li>
+            <h1>
+              Departamento: <strong>{{ departamento.departamento }}</strong>
+            </h1>
+            {% if 'catalogo.change_departamento' in perms %}
+            <a href="{% url 'actualizar_dep' departamento.id %}">Modificar</a>
+            {% endif%} {% if 'catalogo.delete_departamento' in perms %}
+            <a href="{% url 'dep_delete' departamento.id %}">Eliminar</a>
+            {% endif%}
+            <ul>
+              {% for municipio in departamento.municipios %}
+              <li>
+                Municipio:
+                <strong>{{ municipio.nombre }}</strong>
+                {% if 'catalogo.change_municipio' in perms %}
+                <a href="{% url 'actualizar_municipio' municipio.id %}">Modificar</a>
+                {% endif%} {% if 'catalogo.delete_municipio' in perms %}
+                <a href="{% url 'municipio_delete' municipio.id %}">Eliminar</a>
+                {% endif%}
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      </td>
+      {% if user.is_authenticated %}
+      <td>
+        {% if 'app_name.change_pais' in perms %}
+        <a href="{% url 'pais_edit' resultado.id %}">Modificar</a>
+        {% endif%} {% if 'app_name.delete_pais' in perms %}
+        <a href="{% url 'pais_delete' resultado.id %}">Eliminar</a>
+        {% endif%}
+      </td>
+      {% else%} {% endif%}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{%endblock%}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{% if object %}Editar{% else %}Agregar{% endif %} País</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if object %}Actualizar{% else %}Agregar{% endif %}</button>
+</form>
+
+{% endblock %}
