@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 
 # Create your views here.
 
@@ -43,17 +44,16 @@ def listar(request):
     context = {
         'resultados': [],
         'query': query,
-        'stado': False,
+        'stado': True,
     }
-
+    
     if action == 'buscar' and query:
-        context['stado'] = True
     # Buscamos por países
-        for pais in Pais.objects.filter(Q(nombre__icontains=query)):
-            context['resultados'].append({'id': pais.id,'pais': pais.nombre, 'departamentos': []})
+        for pais in Pais.objects.filter(Q(nombre__icontains=query) & Q(status=context['stado'])):
+            context['resultados'].append({'id': pais.id,'pais': pais.nombre, 'status': pais.status, 'departamentos': []})
 
         # Buscamos por departamentos
-        for depto in Departamento.objects.filter(Q(nombre__icontains=query)):
+        for depto in Departamento.objects.filter(Q(nombre__icontains=query) & Q(status=context['stado'])):
             pais_entry = next((entry for entry in context['resultados'] if entry['pais'] == depto.pais.nombre), None)
             if not pais_entry:
                 pais_entry = {'pais': depto.pais.nombre, 'departamentos': []}
@@ -61,7 +61,7 @@ def listar(request):
             pais_entry['departamentos'].append({ 'id': depto.id, 'departamento': depto.nombre, 'municipios': []})
 
         # Buscamos por municipios
-        for municipio in Municipio.objects.filter(Q(nombre__icontains=query)):
+        for municipio in Municipio.objects.filter(Q(nombre__icontains=query) & Q(status=context['stado'])):
             pais_entry = next((entry for entry in context['resultados'] if entry['pais'] == municipio.departamento.pais.nombre), None)
             if not pais_entry:
                 pais_entry = {'id': municipio.departamento.pais.id, 'pais': municipio.departamento.pais.nombre, 'departamentos': []}
@@ -75,41 +75,39 @@ def listar(request):
             depto_entry['municipios'].append({'id': municipio.id, 'nombre': municipio.nombre})
 
     elif action == 'listar':
-        context['stado'] = False
         # Listamos todos los países
-        for pais in Pais.objects.all():
-            context['resultados'].append({'id': pais.id, 'pais': pais.nombre, 'departamentos': []})
+        for pais in Pais.objects.filter(status = context['stado']):
+            context['resultados'].append({'id': pais.id, 'pais': pais.nombre,'status': pais.status, 'departamentos': []})
 
         # Listamos todos los departamentos
-        for depto in Departamento.objects.all():
+        for depto in Departamento.objects.filter(status = context['stado']):
             pais_entry = next((entry for entry in context['resultados'] if entry['pais'] == depto.pais.nombre), None)
             if not pais_entry:
-                pais_entry = {'id': depto.pais.id, 'pais': depto.pais.nombre, 'departamentos': []}
+                pais_entry = {'id': depto.pais.id, 'pais': depto.pais.nombre,'status': depto.pais.status, 'departamentos': []}
                 context['resultados'].append(pais_entry)
-            pais_entry['departamentos'].append({ 'id': depto.id, 'departamento': depto.nombre, 'municipios': []})
+            pais_entry['departamentos'].append({ 'id': depto.id, 'departamento': depto.nombre, 'status': depto.status, 'municipios': []})
 
         # Listamos todos los municipios
-        for municipio in Municipio.objects.filter(Q(nombre__icontains=query)):
+        for municipio in Municipio.objects.filter(Q(nombre__icontains=query) & Q(status=context['stado'])):
             pais_entry = next((entry for entry in context['resultados'] if entry['pais'] == municipio.departamento.pais.nombre), None)
             if not pais_entry:
-                pais_entry = {'id': municipio.departamento.pais.id,'pais': municipio.departamento.pais.nombre, 'departamentos': []}
+                pais_entry = {'id': municipio.departamento.pais.id,'pais': municipio.departamento.pais.nombre,'status': municipio.departamento.pais.status, 'departamentos': []}
                 context['resultados'].append(pais_entry)
                 
             depto_entry = next((entry for entry in pais_entry['departamentos'] if entry['departamento'] == municipio.departamento.nombre), None)
             if not depto_entry:
-                depto_entry = {'id': municipio.departamento.id, 'departamento': municipio.departamento.nombre, 'municipios': []}
+                depto_entry = {'id': municipio.departamento.id, 'departamento': municipio.departamento.nombre, 'status': municipio.departamento.status, 'municipios': []}
                 pais_entry['departamentos'].append(depto_entry)
                 
-            depto_entry['municipios'].append({'id': municipio.id, 'nombre': municipio.nombre})
+            depto_entry['municipios'].append({'id': municipio.id, 'nombre': municipio.nombre, 'status': municipio.status})
         
-    else : 
-        context['stado'] = False    
+    else :   
         # Listamos todos los países
-        for pais in Pais.objects.all():
-            context['resultados'].append({'id': pais.id, 'pais': pais.nombre, 'departamentos': []})
+        for pais in Pais.objects.filter(status = context['stado']):
+            context['resultados'].append({'id': pais.id, 'pais': pais.nombre, 'status': pais.status, 'departamentos': []})
 
         # Listamos todos los departamentos
-        for depto in Departamento.objects.all():
+        for depto in Departamento.objects.filter(status = context['stado']):
             pais_entry = next((entry for entry in context['resultados'] if entry['pais'] == depto.pais.nombre), None)
             if not pais_entry:
                 pais_entry = {'id': depto.pais.id, 'pais': depto.pais.nombre, 'departamentos': []}
@@ -117,7 +115,7 @@ def listar(request):
             pais_entry['departamentos'].append({ 'id': depto.id, 'departamento': depto.nombre, 'municipios': []})
 
         # Listamos todos los municipios
-        for municipio in Municipio.objects.filter(Q(nombre__icontains=query)):
+        for municipio in Municipio.objects.filter(Q(nombre__icontains=query) & Q(status=context['stado'])):
             pais_entry = next((entry for entry in context['resultados'] if entry['pais'] == municipio.departamento.pais.nombre), None)
             if not pais_entry:
                 pais_entry = {'id': municipio.departamento.id,'pais': municipio.departamento.pais.nombre, 'departamentos': []}
@@ -148,13 +146,15 @@ def listar(request):
     return render(request, 'listar.html', context)
     
 
+
+
 @permission_required('catalogo.add_pais', raise_exception=True)
 def     agregar_pais(request):
     if request.method == 'POST':
         form = PaisForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("listar")
+            return redirect("listar", mode='lista')
     
     else:
         form = PaisForm()
@@ -168,7 +168,7 @@ def actualizar_pais(request, pk):
         form = PaisForm(request.POST, instance=pais)
         if form.is_valid():
             form.save()
-            return redirect('listar')
+            return redirect('listar', mode='lista')
     else:
         form = PaisForm(instance=pais)
     return render(request, 'paises/form.html', {'form': form, 'object': pais})
@@ -178,10 +178,11 @@ def eliminar_pais(request, pk):
     pais = get_object_or_404(Pais, pk=pk)
     if request.method == 'POST':
         pais.delete()
+        print(pais)
         return redirect('listar')
-    return render(request, 'paises/eliminar.html', {'pais': pais.nombre})
-
-
+    return render(request, 'paises/eliminar.html', {'pais': pais.nombre, 'puede_eliminar': pais.puede_eliminar})
+    
+        
 
 @permission_required('catalogo.add_departamento', raise_exception=True)
 def agregar_departamento(request):
@@ -189,7 +190,7 @@ def agregar_departamento(request):
         form = DepartamentoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar')  
+            return redirect('listar', mode='lista')  
     else:
         form = DepartamentoForm()
         
@@ -202,13 +203,13 @@ def actualizar_departamento(request, pk):
         form = DepartamentoForm(request.POST, instance=departamento)
         if form.is_valid():
             form.save()
-            return redirect('listar')
+            return redirect('listar', mode='lista')
     else:
         form = DepartamentoForm(instance=departamento)
     return render(request, 'departamento/form.html', {'form': form, 'object': departamento})
 
 @permission_required('catalogo.delete_departamento', raise_exception=True)
-def eliminar_departamento(request, pk):
+def eliminar_departamento(request, pk,):
     departamento = get_object_or_404(Departamento, pk=pk)
     if request.method == 'POST':
         departamento.delete()
@@ -223,7 +224,7 @@ def agregar_municipio(request):
         form = MunicipioForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar') 
+            return redirect('listar', mode='lista') 
     else:
         form = MunicipioForm()
         
@@ -236,7 +237,7 @@ def actualizar_municipio(request, pk):
         form = MunicipioForm(request.POST, instance=municipio)
         if form.is_valid():
             form.save()
-            return redirect('listar')
+            return redirect('listar', mode='lista')
     else:
         form = MunicipioForm(instance=municipio)
     return render(request, 'municipios/form.html', {'form': form, 'object': municipio})

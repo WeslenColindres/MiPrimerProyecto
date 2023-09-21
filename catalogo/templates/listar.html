@@ -49,30 +49,33 @@
       <td>
         {{ resultado.pais }}
         <ul>
-          {% for departamento in resultado.departamentos %}
+          {% for departamento in resultado.departamentos%}
           <li>
             <h1>
               Departamento: <strong>{{ departamento.departamento }}</strong>
             </h1>
             {% if 'catalogo.change_departamento' in perms %}
             <a href="{% url 'actualizar_dep' departamento.id %}">Modificar</a>
-            {% endif%} {% if 'catalogo.delete_departamento' in perms %}
-            <a href="{% url 'dep_delete' departamento.id %}">Eliminar</a>
-            {% endif%}
+            {% endif %} {% if 'catalogo.delete_departamento' in perms%}
+            <a href="{% url 'dep_delete' departamento.id%}">Eliminar</a>
+            {% endif %}
             <ul>
               {% for municipio in departamento.municipios %}
               <li>
                 Municipio:
                 <strong>{{ municipio.nombre }}</strong>
-                {% if 'catalogo.change_municipio' in perms %}
-                <a href="{% url 'actualizar_municipio' municipio.id %}">Modificar</a>
-                {% endif%} {% if 'catalogo.delete_municipio' in perms %}
+                {% if 'catalogo.change_municipio' in perms%}
+                <a href="{% url 'actualizar_municipio' municipio.id %}"
+                  >Modificar</a
+                >
+                {% endif%} {% if 'catalogo.delete_municipio' in perms%}
                 <a href="{% url 'municipio_delete' municipio.id %}">Eliminar</a>
                 {% endif%}
               </li>
               {% endfor %}
             </ul>
           </li>
+           
           {% endfor %}
         </ul>
       </td>
@@ -91,19 +94,28 @@
 </table>
 <div class="pagination">
   <span class="step-links">
-      {% if resultados.has_previous %}
-          <a href="?page=1&search={{ query }}&action={{ action }}">Primero</a>
-          <a href="?page={{ resultados.previous_page_number }}&search={{ query }}&action={{ action }}">Anterior</a>
-      {% endif %}
+    {% if resultados.has_previous %}
+    <a href="?page=1&search={{ query }}&action={{ action }}">Primero</a>
+    <a
+      href="?page={{ resultados.previous_page_number }}&search={{ query }}&action={{ action }}"
+      >Anterior</a
+    >
+    {% endif %}
 
-      <span class="current">
-          Página {{ resultados.number }} de {{ resultados.paginator.num_pages }}.
-      </span>
+    <span class="current">
+      Página {{ resultados.number }} de {{ resultados.paginator.num_pages }}.
+    </span>
 
-      {% if resultados.has_next %}
-          <a href="?page={{ resultados.next_page_number }}&search={{ query }}&action={{ action }}">Siguiente</a>
-          <a href="?page={{ resultados.paginator.num_pages }}&search={{ query }}&action={{ action }}">Último</a>
-      {% endif %}
+    {% if resultados.has_next %}
+    <a
+      href="?page={{ resultados.next_page_number }}&search={{ query }}&action={{ action }}"
+      >Siguiente</a
+    >
+    <a
+      href="?page={{ resultados.paginator.num_pages }}&search={{ query }}&action={{ action }}"
+      >Último</a
+    >
+    {% endif %}
   </span>
 </div>
 {%endblock%}

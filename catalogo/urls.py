@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
     path('lista/', views.listar, name='listar'),
+
     # URLs para pais
     path('pais/agregar/', views.agregar_pais, name='agregar_pais'),
     path('pais/editar/<int:pk>/', views.actualizar_pais, name='pais_edit'),
@@ -28,4 +29,6 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(next_page='login'), name='logout'),
     
     path('',views.home_view, name='base'),
+    
+    path('api/', include('catalogo.urls_api')),
 ]
